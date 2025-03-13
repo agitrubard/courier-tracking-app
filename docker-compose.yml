@@ -1,9 +1,27 @@
 services:
+  courier_tracking_nosql_database:
+    image: mongo:latest
+    container_name: courier_tracking_nosql_database
+    restart: always
+    environment:
+      - MONGO_INITDB_DATABASE=courier_tracking
+      - MONGO_INITDB_ROOT_USERNAME=courier_tracking
+      - MONGO_INITDB_ROOT_PASSWORD=courier_tracking_pass
+    volumes:
+      - ./docker/volumes/mongodb:/data/db
+      - ./docker/init/mongodb:/docker-entrypoint-initdb.d
+    ports:
+      - "27017:27017"
+    command: [ "mongod", "--auth" ]
   courier_tracking_application:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: courier_tracking_application
     restart: on-failure
+    environment:
+      - NOSQL_DB_IP=host.docker.internal
     ports:
       - "8988:8988"
+    depends_on:
+      - courier_tracking_nosql_database
