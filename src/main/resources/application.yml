@@ -1,0 +1,7 @@
+server:
+  port: 8988
+
+logging:
+  level:
+    web: debug
+    sql: debug
