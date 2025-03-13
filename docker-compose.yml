@@ -1,0 +1,9 @@
+services:
+  courier_tracking_application:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: courier_tracking_application
+    restart: on-failure
+    ports:
+      - "8988:8988"
