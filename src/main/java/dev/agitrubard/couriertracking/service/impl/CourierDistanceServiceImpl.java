@@ -11,22 +11,27 @@ class CourierDistanceServiceImpl implements CourierDistanceService {
 
     private static final double EARTH_RADIUS_KM = 6371.0;
 
-    @Override
-    public double calculate(final CourierLocation currentCourierLocation,
-                            final CourierLocation lastCourierLocation) {
+    public double calculateDistanceInKilometers(final CourierLocation currentCourierLocation,
+                                                final CourierLocation lastCourierLocation) {
 
-        final double currentLatitude = currentCourierLocation.getLatitude();
-        final double currentLongitude = currentCourierLocation.getLongitude();
-        final double lastLatitude = lastCourierLocation.getLatitude();
-        final double lastLongitude = lastCourierLocation.getLongitude();
+        return this.haversineDistance(
+                currentCourierLocation.getLatitude(),
+                currentCourierLocation.getLongitude(),
+                lastCourierLocation.getLatitude(),
+                lastCourierLocation.getLongitude()
+        );
+    }
 
-        final double dLatitude = Math.toRadians(lastLatitude - currentLatitude);
-        final double dLongitude = Math.toRadians(lastLongitude - currentLongitude);
+    private double haversineDistance(double latitudeFirst, double longitudeFirst,
+                                     double latitudeSecond, double longitudeSecond) {
 
-        final double a = Math.sin(dLatitude / 2) * Math.sin(dLatitude / 2)
-                         + Math.cos(Math.toRadians(currentLatitude)) * Math.cos(Math.toRadians(lastLatitude))
-                           * Math.sin(dLongitude / 2) * Math.sin(dLongitude / 2);
-        final double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double dLat = Math.toRadians(latitudeSecond - latitudeFirst);
+        double dLon = Math.toRadians(longitudeSecond - longitudeFirst);
+
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                   + Math.cos(Math.toRadians(latitudeFirst)) * Math.cos(Math.toRadians(latitudeSecond))
+                     * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
         return EARTH_RADIUS_KM * c;
     }

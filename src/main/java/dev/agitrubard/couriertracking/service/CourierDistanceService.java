@@ -4,6 +4,6 @@ import dev.agitrubard.couriertracking.model.CourierLocation;
 
 public interface CourierDistanceService {
 
-    double calculate(CourierLocation currentCourierLocation, CourierLocation lastCourierLocation);
+    double calculateDistanceInKilometers(CourierLocation currentCourierLocation, CourierLocation lastCourierLocation);
 
 }

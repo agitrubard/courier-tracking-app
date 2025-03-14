@@ -41,7 +41,7 @@ class CourierTrackingServiceImpl implements CourierTrackingService {
         }
 
         final Double lastDistanceKilometers = courierDistanceService
-                .calculate(currentCourierLocation, lastCourierLocation.get());
+                .calculateDistanceInKilometers(currentCourierLocation, lastCourierLocation.get());
 
         final Optional<Courier> courierFromDatabase = courierReadPort.findById(courierId);
         if (courierFromDatabase.isEmpty()) {
