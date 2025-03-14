@@ -1,4 +1,4 @@
-package dev.agitrubard.couriertracking.model;
+package dev.agitrubard.couriertracking.model.entity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +11,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Document(collection = "stores")
-public class Store {
+public class StoreEntity {
 
     @Id
     private UUID id;

@@ -1,8 +1,7 @@
-package dev.agitrubard.couriertracking;
+package dev.agitrubard.couriertracking.repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.agitrubard.couriertracking.model.Store;
-import dev.agitrubard.couriertracking.repository.StoreRepository;
+import dev.agitrubard.couriertracking.model.entity.StoreEntity;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -31,26 +30,26 @@ class StoreInitializer {
 
         log.info("Initializing store data...");
 
-        final List<Store> stores = this.readStores();
+        final List<StoreEntity> storeEntities = this.readStores();
 
         long count = storeRepository.count();
-        if (stores.size() == count) {
+        if (storeEntities.size() == count) {
             log.warn("Found {} store data and will not initialize again.", count);
             return;
         }
 
         storeRepository.deleteAll();
-        stores.forEach(store -> store.setCreatedAt(LocalDateTime.now()));
-        storeRepository.saveAll(stores);
+        storeEntities.forEach(storeEntity -> storeEntity.setCreatedAt(LocalDateTime.now()));
+        storeRepository.saveAll(storeEntities);
         log.info("Store data initialized.");
     }
 
-    private List<Store> readStores() {
+    private List<StoreEntity> readStores() {
         final String path = "files/stores.json";
         try {
             Resource resource = new ClassPathResource(path);
-            Store[] stores = OBJECT_MAPPER.readValue(resource.getInputStream(), Store[].class);
-            return Arrays.asList(stores);
+            StoreEntity[] storeEntities = OBJECT_MAPPER.readValue(resource.getInputStream(), StoreEntity[].class);
+            return Arrays.asList(storeEntities);
         } catch (IOException e) {
             throw new RuntimeException("Failed to read stores from JSON file at: " + path, e);
         }
