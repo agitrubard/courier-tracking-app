@@ -11,14 +11,15 @@ class CourierDistanceServiceImpl implements CourierDistanceService {
 
     private static final double EARTH_RADIUS_KM = 6371.0;
 
-    public double calculateDistanceInKilometers(final CourierLocation currentCourierLocation,
-                                                final CourierLocation lastCourierLocation) {
+    @Override
+    public double calculateDistanceInKilometers(final CourierLocation firstCourierLocation,
+                                                final CourierLocation secondCourierLocation) {
 
         return this.haversineDistance(
-                currentCourierLocation.getLatitude(),
-                currentCourierLocation.getLongitude(),
-                lastCourierLocation.getLatitude(),
-                lastCourierLocation.getLongitude()
+                firstCourierLocation.getLatitude(),
+                firstCourierLocation.getLongitude(),
+                secondCourierLocation.getLatitude(),
+                secondCourierLocation.getLongitude()
         );
     }
 
