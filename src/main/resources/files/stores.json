@@ -1,0 +1,38 @@
+[
+  {
+    "id": "8d9b3426-ae1f-41e8-a85f-f4978b636a86",
+    "name": "Store1",
+    "latitude": 40.9923307,
+    "longitude": 29.1244229
+  },
+  {
+    "id": "aa939ae1-a869-4b34-8d98-ea715293058e",
+    "name": "Store2",
+    "latitude": 40.986106,
+    "longitude": 29.1161293
+  },
+  {
+    "id": "c198a9c1-b61b-456f-8fe7-52ce05322e97",
+    "name": "Store3",
+    "latitude": 41.0066851,
+    "longitude": 28.6552262
+  },
+  {
+    "id": "4828566d-ad77-49a0-b054-d8d1a5d47939",
+    "name": "Store4",
+    "latitude": 41.055783,
+    "longitude": 29.0210292
+  },
+  {
+    "id": "4e5e0f7a-91e9-4851-b61b-011d3c68e134",
+    "name": "Store5",
+    "latitude": 40.9632463,
+    "longitude": 29.0630908
+  },
+  {
+    "id": "bda459e8-2f2e-4866-a229-eef48a54da06",
+    "name": "Store6",
+    "latitude": 42.9632463,
+    "longitude": 27.0630908
+  }
+]
