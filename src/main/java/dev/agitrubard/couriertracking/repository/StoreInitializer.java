@@ -1,8 +1,7 @@
-package dev.agitrubard.couriertracking;
+package dev.agitrubard.couriertracking.repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.agitrubard.couriertracking.model.entity.StoreEntity;
-import dev.agitrubard.couriertracking.repository.StoreRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
