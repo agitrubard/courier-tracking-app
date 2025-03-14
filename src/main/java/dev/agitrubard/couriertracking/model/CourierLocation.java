@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -17,10 +16,5 @@ public class CourierLocation extends AbstractDomainModel {
     private UUID courierId;
     private Double latitude;
     private Double longitude;
-
-    @Override
-    public void update() {
-        this.updatedAt = LocalDateTime.now();
-    }
 
 }

@@ -20,6 +20,8 @@ public abstract class AbstractDomainModel {
     protected LocalDateTime createdAt = LocalDateTime.now();
     protected LocalDateTime updatedAt;
 
-    public abstract void update();
+    public void update() {
+        this.updatedAt = LocalDateTime.now();
+    }
 
 }

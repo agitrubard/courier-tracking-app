@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -17,9 +16,9 @@ public class Courier extends AbstractDomainModel {
     @Builder.Default
     private Double totalDistanceKilometers = 0.0;
 
-    @Override
-    public void update() {
-        this.updatedAt = LocalDateTime.now();
+    public void update(final Double totalDistanceKilometers) {
+        super.update();
+        this.totalDistanceKilometers += totalDistanceKilometers;
     }
 
 }
