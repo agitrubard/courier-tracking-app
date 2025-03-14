@@ -35,6 +35,13 @@ class CourierTrackingServiceImpl implements CourierTrackingService {
         final CourierLocation currentCourierLocation = this
                 .saveCourierLocation(courierId, saveRequest.getLatitude(), saveRequest.getLongitude());
 
+        this.saveOrUpdateCourier(courierId, lastCourierLocation, currentCourierLocation);
+    }
+
+    private void saveOrUpdateCourier(final UUID courierId,
+                                     final Optional<CourierLocation> lastCourierLocation,
+                                     final CourierLocation currentCourierLocation) {
+
         if (lastCourierLocation.isEmpty()) {
             this.saveCourier(courierId, 0D);
             return;
