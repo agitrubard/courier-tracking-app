@@ -37,7 +37,7 @@ class CourierLocationAdapterTest extends AbstractUnitTest {
         // When
         CourierLocationEntity mockCourierLocationEntity = new CourierLocationEntityBuilder()
                 .withValidValues()
-                .withId(mockCourierId)
+                .withCourierId(mockCourierId)
                 .build();
         Mockito.when(courierLocationRepository.findTopByCourierIdOrderByCreatedAtDesc(mockCourierId))
                 .thenReturn(Optional.of(mockCourierLocationEntity));

@@ -18,8 +18,8 @@ public class CourierLocationEntityBuilder extends TestDataBuilder<CourierLocatio
                 .withCreatedAtNow();
     }
 
-    public CourierLocationEntityBuilder withId(UUID id) {
-        data.setId(id);
+    public CourierLocationEntityBuilder withCourierId(UUID courierId) {
+        data.setCourierId(courierId);
         return this;
     }
 
