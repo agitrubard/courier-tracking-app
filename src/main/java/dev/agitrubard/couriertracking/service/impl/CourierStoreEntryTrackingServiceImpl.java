@@ -10,6 +10,7 @@ import dev.agitrubard.couriertracking.service.CourierDistanceService;
 import dev.agitrubard.couriertracking.service.CourierStoreEntryTrackingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,6 +28,7 @@ class CourierStoreEntryTrackingServiceImpl implements CourierStoreEntryTrackingS
     private final CourierStoreEntryReadPort courierStoreEntryReadPort;
     private final StoreReadPort storeReadPort;
 
+    @Async
     @Override
     public void save(final UUID courierId,
                      final CourierLocation currentCourierLocation) {
