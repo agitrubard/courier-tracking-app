@@ -29,6 +29,7 @@ class CourierAdapter implements CourierReadPort, CourierSavePort {
                 .map(courierEntityToDomainMapper::map);
     }
 
+
     @Override
     public void save(final Courier courier) {
         final CourierEntity courierEntity = courierToEntityMapper.map(courier);

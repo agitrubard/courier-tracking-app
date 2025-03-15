@@ -10,4 +10,9 @@ public class CourierBuilder extends TestDataBuilder<Courier> {
         return this;
     }
 
+    public CourierBuilder withoutId() {
+        data.setId(null);
+        return this;
+    }
+
 }
