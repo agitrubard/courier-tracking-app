@@ -22,6 +22,7 @@ class CourierLocationAdapter implements CourierLocationReadPort, CourierLocation
     private final CourierLocationToEntityMapper courierLocationToEntityMapper = CourierLocationToEntityMapper.INSTANCE;
     private final CourierLocationEntityToDomainMapper courierLocationEntityToDomainMapper = CourierLocationEntityToDomainMapper.INSTANCE;
 
+
     @Override
     public Optional<CourierLocation> findLastByCourierId(UUID courierId) {
         return courierLocationRepository.findTopByCourierIdOrderByCreatedAtDesc(courierId)
