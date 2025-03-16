@@ -49,7 +49,8 @@ class CourierTrackingServiceImpl implements CourierTrackingService {
 
         log.trace("Courier location saved for courierId: {}, time: {}", courierId, saveRequest.getTime());
 
-        this.saveOrUpdateCourier(courierId, lastCourierLocation, currentCourierLocation);
+        final Double lastDistanceKilometers = this.calculateLastDistanceKilometers(currentCourierLocation, lastCourierLocation);
+        this.saveOrUpdateCourier(courierId, lastDistanceKilometers);
 
         courierStoreEntryTrackingService.save(courierId, currentCourierLocation);
     }
@@ -67,20 +68,23 @@ class CourierTrackingServiceImpl implements CourierTrackingService {
         return courierCurrentLocation;
     }
 
-    private void saveOrUpdateCourier(final UUID courierId,
-                                     final Optional<CourierLocation> lastCourierLocation,
-                                     final CourierLocation currentCourierLocation) {
-
-        log.trace("Courier will be saved or updated for courierId: {}", courierId);
+    private Double calculateLastDistanceKilometers(final CourierLocation currentCourierLocation,
+                                                   final Optional<CourierLocation> lastCourierLocation) {
 
         if (lastCourierLocation.isEmpty()) {
-            this.saveCourier(courierId, 0D);
-            log.trace("Courier saved for courierId: {}", courierId);
-            return;
+            return 0D;
         }
 
-        final Double lastDistanceKilometers = courierDistanceService
-                .calculateDistanceInKilometers(currentCourierLocation.getLocation(), lastCourierLocation.get().getLocation());
+        return courierDistanceService.calculateDistanceInKilometers(
+                currentCourierLocation.getLocation(),
+                lastCourierLocation.get().getLocation()
+        );
+    }
+
+    private void saveOrUpdateCourier(final UUID courierId,
+                                     final Double lastDistanceKilometers) {
+
+        log.trace("Courier will be saved or updated for courierId: {}", courierId);
 
         final Optional<Courier> courierFromDatabase = courierReadPort.findById(courierId);
         if (courierFromDatabase.isEmpty()) {
