@@ -54,6 +54,19 @@ class CourierTrackingServiceImpl implements CourierTrackingService {
         courierStoreEntryTrackingService.save(courierId, currentCourierLocation);
     }
 
+    private CourierLocation saveCourierLocation(final UUID courierId,
+                                                final Location location,
+                                                final LocalDateTime time) {
+
+        final CourierLocation courierCurrentLocation = CourierLocation.builder()
+                .courierId(courierId)
+                .location(location)
+                .createdAt(time)
+                .build();
+        courierLocationSavePort.save(courierCurrentLocation);
+        return courierCurrentLocation;
+    }
+
     private void saveOrUpdateCourier(final UUID courierId,
                                      final Optional<CourierLocation> lastCourierLocation,
                                      final CourierLocation currentCourierLocation) {
@@ -78,19 +91,6 @@ class CourierTrackingServiceImpl implements CourierTrackingService {
 
         this.updateCourier(courierFromDatabase.get(), lastDistanceKilometers);
         log.trace("Courier updated for courierId: {}", courierId);
-    }
-
-    private CourierLocation saveCourierLocation(final UUID courierId,
-                                                final Location location,
-                                                final LocalDateTime time) {
-
-        final CourierLocation courierCurrentLocation = CourierLocation.builder()
-                .courierId(courierId)
-                .location(location)
-                .createdAt(time)
-                .build();
-        courierLocationSavePort.save(courierCurrentLocation);
-        return courierCurrentLocation;
     }
 
     private void saveCourier(final UUID courierId,
