@@ -1,5 +1,7 @@
 package dev.agitrubard.couriertracking.model;
 
+import java.util.UUID;
+
 public class StoreBuilder extends TestDataBuilder<Store> {
 
     public StoreBuilder() {
@@ -9,6 +11,11 @@ public class StoreBuilder extends TestDataBuilder<Store> {
     public StoreBuilder withValidValues() {
         return this
                 .withLocation(Location.builder().build());
+    }
+
+    public StoreBuilder withId(UUID id) {
+        data.setId(id);
+        return this;
     }
 
     public StoreBuilder withName(String name) {

@@ -32,11 +32,8 @@ class CourierStoreEntryTrackingServiceImpl implements CourierStoreEntryTrackingS
     public void save(final UUID courierId,
                      final CourierLocation currentCourierLocation) {
 
-        final boolean isLoggingNotRequired = this.isLoggingNotRequired(courierId, currentCourierLocation);
-        if (isLoggingNotRequired) {
-            log.trace("Courier Store Entry logging is not required for courier with id: {}", courierId);
-            return;
-        }
+        final Optional<CourierStoreEntry> lastCourierStoreEntry = courierStoreEntryReadPort
+                .findLastByCourierId(courierId);
 
         log.trace("Stores will be checked for courier with id: {}", courierId);
 
@@ -49,6 +46,21 @@ class CourierStoreEntryTrackingServiceImpl implements CourierStoreEntryTrackingS
                 continue;
             }
 
+            final boolean isLoggingNotRequired = lastCourierStoreEntry
+                    .filter(courierStoreEntry -> courierStoreEntry.getStoreId().equals(store.getId()))
+                    .map(courierStoreEntry -> courierStoreEntry.getCreatedAt()
+                            .plusMinutes(1)
+                            .isAfter(currentCourierLocation.getCreatedAt())
+                    )
+                    .orElse(false);
+            if (isLoggingNotRequired) {
+                log.trace(
+                        "Courier Store Entry logging is not required for courier with courierId: {} and storeId: {}",
+                        courierId, store.getId()
+                );
+                continue;
+            }
+
             final CourierStoreEntry courierStoreEntry = CourierStoreEntry.builder()
                     .courierId(courierId)
                     .storeId(store.getId())
@@ -57,20 +69,6 @@ class CourierStoreEntryTrackingServiceImpl implements CourierStoreEntryTrackingS
             courierStoreEntrySavePort.save(courierStoreEntry);
             log.debug("Courier near to store with storeId: {} and courierId: {}", store.getId(), courierId);
         }
-    }
-
-    private boolean isLoggingNotRequired(final UUID courierId,
-                                         final CourierLocation currentCourierLocation) {
-
-        final Optional<CourierStoreEntry> lastCourierStoreEntry = courierStoreEntryReadPort
-                .findLastByCourierId(courierId);
-
-        return lastCourierStoreEntry
-                .map(courierStoreEntry -> courierStoreEntry.getCreatedAt()
-                        .plusMinutes(1)
-                        .isAfter(currentCourierLocation.getCreatedAt())
-                )
-                .orElse(false);
     }
 
 }
