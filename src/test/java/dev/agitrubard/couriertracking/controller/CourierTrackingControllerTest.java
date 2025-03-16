@@ -191,7 +191,7 @@ class CourierTrackingControllerTest extends AbstractRestControllerTest {
 
 
     @Test
-    void givenValidId_whenTotalDistanceKilometersFound_thenReturnSuccess() throws Exception {
+    void givenValidCourierId_whenTotalDistanceKilometersFound_thenReturnSuccess() throws Exception {
 
         // Given
         UUID mockCourierId = UUID.fromString("e1088ef7-4244-4cca-b6fe-0239aa1323ca");
@@ -228,7 +228,7 @@ class CourierTrackingControllerTest extends AbstractRestControllerTest {
             "g1234567-89ab-cdef-0123-456789abcdef",
             "ffffffff-ffff-ffff-ffff-fffffffffffff"
     })
-    void givenId_whenIdIsNotValid_thenReturnValidationError(String mockCourierId) throws Exception {
+    void givenCourierId_whenCourierIdIsNotValid_thenReturnValidationError(String mockCourierId) throws Exception {
 
         // Then
         String endpoint = BASE_PATH + "/" + mockCourierId + "/distances/total";
