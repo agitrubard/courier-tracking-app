@@ -4,15 +4,27 @@ services:
     container_name: courier_tracking_nosql_database
     restart: always
     environment:
-      - MONGO_INITDB_DATABASE=courier_tracking
-      - MONGO_INITDB_ROOT_USERNAME=courier_tracking
-      - MONGO_INITDB_ROOT_PASSWORD=courier_tracking_pass
+      MONGO_INITDB_DATABASE: courier_tracking
+      MONGO_INITDB_ROOT_USERNAME: courier_tracking
+      MONGO_INITDB_ROOT_PASSWORD: courier_tracking_pass
     volumes:
       - ./docker/volumes/mongodb:/data/db
       - ./docker/init/mongodb:/docker-entrypoint-initdb.d
     ports:
       - "27017:27017"
     command: [ "mongod", "--auth" ]
+  courier_tracking_application_queue:
+    container_name: courier_tracking_application_queue
+    image: rabbitmq:4.0.5-management
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: courier_tracking
+      RABBITMQ_DEFAULT_PASS: courier_tracking_pass
+    volumes:
+      - ./docker/volumes/rabbitmq:/var/lib/rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
   courier_tracking_application:
     build:
       context: .
@@ -25,3 +37,4 @@ services:
       - "8988:8988"
     depends_on:
       - courier_tracking_nosql_database
+      - courier_tracking_application_queue
