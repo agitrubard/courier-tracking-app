@@ -3,6 +3,7 @@ package dev.agitrubard.couriertracking.controller;
 import dev.agitrubard.couriertracking.model.request.CourierLocationSaveRequest;
 import dev.agitrubard.couriertracking.model.response.CourierDistanceResponse;
 import dev.agitrubard.couriertracking.model.response.CustomSuccessResponse;
+import dev.agitrubard.couriertracking.service.CourierTrackingQueueService;
 import dev.agitrubard.couriertracking.service.CourierTrackingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +22,11 @@ import java.util.UUID;
 class CourierTrackingController {
 
     private final CourierTrackingService courierTrackingService;
+    private final CourierTrackingQueueService courierTrackingQueueService;
 
     @PostMapping("/locations")
     CustomSuccessResponse<Void> save(@RequestBody @Valid CourierLocationSaveRequest saveRequest) {
-        courierTrackingService.saveLocation(saveRequest);
+        courierTrackingQueueService.saveLocation(saveRequest);
         return CustomSuccessResponse.success();
     }
 
