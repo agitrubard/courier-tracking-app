@@ -8,6 +8,7 @@ import dev.agitrubard.couriertracking.model.response.CustomErrorResponse;
 import dev.agitrubard.couriertracking.model.response.CustomErrorResponseBuilder;
 import dev.agitrubard.couriertracking.model.response.CustomSuccessResponse;
 import dev.agitrubard.couriertracking.model.response.CustomSuccessResponseBuilder;
+import dev.agitrubard.couriertracking.service.CourierTrackingQueueService;
 import dev.agitrubard.couriertracking.service.CourierTrackingService;
 import dev.agitrubard.couriertracking.util.CustomMockMvcRequestBuilders;
 import dev.agitrubard.couriertracking.util.CustomMockResultMatchersBuilders;
@@ -28,6 +29,9 @@ class CourierTrackingControllerTest extends AbstractRestControllerTest {
     @MockitoBean
     CourierTrackingService courierTrackingService;
 
+    @MockitoBean
+    CourierTrackingQueueService courierTrackingQueueService;
+
 
     private static final String BASE_PATH = "/api/v1/couriers";
 
@@ -41,7 +45,7 @@ class CourierTrackingControllerTest extends AbstractRestControllerTest {
 
         // When
         Mockito.doNothing()
-                .when(courierTrackingService)
+                .when(courierTrackingQueueService)
                 .saveLocation(Mockito.any(CourierLocationSaveRequest.class));
 
         // Then
@@ -58,7 +62,7 @@ class CourierTrackingControllerTest extends AbstractRestControllerTest {
                         .doesNotHaveJsonPath());
 
         // Verify
-        Mockito.verify(courierTrackingService, Mockito.times(1))
+        Mockito.verify(courierTrackingQueueService, Mockito.times(1))
                 .saveLocation(Mockito.any(CourierLocationSaveRequest.class));
     }
 
@@ -108,7 +112,7 @@ class CourierTrackingControllerTest extends AbstractRestControllerTest {
 
         // When
         Mockito.doNothing()
-                .when(courierTrackingService)
+                .when(courierTrackingQueueService)
                 .saveLocation(Mockito.any(CourierLocationSaveRequest.class));
 
         // Then
@@ -123,7 +127,7 @@ class CourierTrackingControllerTest extends AbstractRestControllerTest {
                         .isBadRequest());
 
         // Verify
-        Mockito.verify(courierTrackingService, Mockito.never())
+        Mockito.verify(courierTrackingQueueService, Mockito.never())
                 .saveLocation(Mockito.any(CourierLocationSaveRequest.class));
     }
 
@@ -139,7 +143,7 @@ class CourierTrackingControllerTest extends AbstractRestControllerTest {
 
         // When
         Mockito.doNothing()
-                .when(courierTrackingService)
+                .when(courierTrackingQueueService)
                 .saveLocation(Mockito.any(CourierLocationSaveRequest.class));
 
         // Then
@@ -154,7 +158,7 @@ class CourierTrackingControllerTest extends AbstractRestControllerTest {
                         .isBadRequest());
 
         // Verify
-        Mockito.verify(courierTrackingService, Mockito.never())
+        Mockito.verify(courierTrackingQueueService, Mockito.never())
                 .saveLocation(Mockito.any(CourierLocationSaveRequest.class));
     }
 
@@ -170,7 +174,7 @@ class CourierTrackingControllerTest extends AbstractRestControllerTest {
 
         // When
         Mockito.doNothing()
-                .when(courierTrackingService)
+                .when(courierTrackingQueueService)
                 .saveLocation(Mockito.any(CourierLocationSaveRequest.class));
 
         // Then
@@ -185,7 +189,7 @@ class CourierTrackingControllerTest extends AbstractRestControllerTest {
                         .isBadRequest());
 
         // Verify
-        Mockito.verify(courierTrackingService, Mockito.never())
+        Mockito.verify(courierTrackingQueueService, Mockito.never())
                 .saveLocation(Mockito.any(CourierLocationSaveRequest.class));
     }
 
