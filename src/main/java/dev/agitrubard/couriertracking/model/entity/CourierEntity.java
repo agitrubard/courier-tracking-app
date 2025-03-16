@@ -9,13 +9,11 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@Document(collection = "stores")
-public class StoreEntity extends AbstractEntity {
+@Document(collection = "couirers")
+public class CourierEntity extends AbstractEntity {
 
     @Id
     private UUID id;
-    private String name;
-    private Double latitude;
-    private Double longitude;
+    private Double totalDistanceKilometers;
 
 }

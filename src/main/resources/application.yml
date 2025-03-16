@@ -1,6 +1,11 @@
 server:
   port: 8988
 
+logging:
+  level:
+    dev:
+      agitrubard: ${LOG_LEVEL:trace}
+
 info:
   application:
     name: '@project.name@'
