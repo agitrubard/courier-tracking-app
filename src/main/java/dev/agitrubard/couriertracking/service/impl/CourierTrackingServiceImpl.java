@@ -49,7 +49,14 @@ class CourierTrackingServiceImpl implements CourierTrackingService {
 
         log.trace("Courier location saved for courierId: {}, time: {}", courierId, time);
 
-        final Double lastDistanceKilometers = this.calculateLastDistanceKilometers(currentCourierLocation, lastCourierLocation);
+        Double lastDistanceKilometers = 0D;
+        if (lastCourierLocation.isPresent()) {
+            lastDistanceKilometers = courierDistanceService.calculateDistanceInKilometers(
+                    currentCourierLocation.getLocation(),
+                    lastCourierLocation.get().getLocation()
+            );
+        }
+
         this.saveOrUpdateCourier(courierId, lastDistanceKilometers);
 
         courierStoreEntryTrackingService.save(courierId, currentCourierLocation);
@@ -66,19 +73,6 @@ class CourierTrackingServiceImpl implements CourierTrackingService {
                 .build();
         courierLocationSavePort.save(courierCurrentLocation);
         return courierCurrentLocation;
-    }
-
-    private Double calculateLastDistanceKilometers(final CourierLocation currentCourierLocation,
-                                                   final Optional<CourierLocation> lastCourierLocation) {
-
-        if (lastCourierLocation.isEmpty()) {
-            return 0D;
-        }
-
-        return courierDistanceService.calculateDistanceInKilometers(
-                currentCourierLocation.getLocation(),
-                lastCourierLocation.get().getLocation()
-        );
     }
 
     private void saveOrUpdateCourier(final UUID courierId,
