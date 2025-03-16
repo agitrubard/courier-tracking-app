@@ -1,6 +1,7 @@
 package dev.agitrubard.couriertracking.service.impl;
 
 import dev.agitrubard.couriertracking.AbstractUnitTest;
+import dev.agitrubard.couriertracking.exception.CourierNotFoundException;
 import dev.agitrubard.couriertracking.model.Courier;
 import dev.agitrubard.couriertracking.model.CourierBuilder;
 import dev.agitrubard.couriertracking.model.CourierLocation;
@@ -14,6 +15,7 @@ import dev.agitrubard.couriertracking.port.CourierReadPort;
 import dev.agitrubard.couriertracking.port.CourierSavePort;
 import dev.agitrubard.couriertracking.service.CourierDistanceService;
 import dev.agitrubard.couriertracking.service.CourierStoreEntryTrackingService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -166,6 +168,53 @@ class CourierTrackingServiceImplTest extends AbstractUnitTest {
 
         Mockito.verify(courierStoreEntryTrackingService, Mockito.times(1))
                 .save(Mockito.any(UUID.class), Mockito.any(CourierLocation.class));
+    }
+
+
+    @Test
+    void givenValidCourierId_whenCourierFound_thenReturnTotalDistanceKilometers() {
+
+        // Given
+        UUID mockCourierId = UUID.fromString("3d724fa3-eac9-4bde-a946-c4257aedc40f");
+
+        // When
+        Courier mockCourier = new CourierBuilder()
+                .withValidValues()
+                .withId(mockCourierId)
+                .withTotalDistanceKilometers(120.0)
+                .build();
+        Mockito.when(courierReadPort.findById(Mockito.any(UUID.class)))
+                .thenReturn(Optional.of(mockCourier));
+
+        // Then
+        Double totalDistanceKilometers = courierTrackingService.findTotalDistanceKilometers(mockCourierId);
+
+        Assertions.assertEquals(120.0, totalDistanceKilometers);
+
+        // Verify
+        Mockito.verify(courierReadPort, Mockito.times(1))
+                .findById(Mockito.any(UUID.class));
+    }
+
+    @Test
+    void givenCourierId_whenCourierNotFound_thenThrowCourierNotFoundException() {
+
+        // Given
+        UUID mockCourierId = UUID.fromString("d48560cc-b068-47c4-881e-3664e770f10a");
+
+        // When
+        Mockito.when(courierReadPort.findById(Mockito.any(UUID.class)))
+                .thenReturn(Optional.empty());
+
+        // Then
+        Assertions.assertThrows(
+                CourierNotFoundException.class,
+                () -> courierTrackingService.findTotalDistanceKilometers(mockCourierId)
+        );
+
+        // Verify
+        Mockito.verify(courierReadPort, Mockito.times(1))
+                .findById(Mockito.any(UUID.class));
     }
 
 }
