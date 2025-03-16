@@ -18,12 +18,12 @@ class CourierDistanceServiceImplTest extends AbstractUnitTest {
 
         // Given
         Location mockFirstLocation = new LocationBuilder()
-                .withLatitude(-6.90389)
-                .withLongitude(107.61861)
+                .withLatitude(41.000000)
+                .withLongitude(29.000000)
                 .build();
         Location mockSecondLocation = new LocationBuilder()
-                .withLatitude(-6.90389)
-                .withLongitude(107.61861)
+                .withLatitude(41.000000)
+                .withLongitude(29.000000)
                 .build();
 
         // When
@@ -35,16 +35,16 @@ class CourierDistanceServiceImplTest extends AbstractUnitTest {
     }
 
     @Test
-    void givenDifferentLocations_whenCalculateDistanceInKilometers_thenReturnDistance2KM() {
+    void givenDifferentLocations_whenCalculateDistanceInKilometers_thenReturnDistance10KM() {
 
         // Given
         Location mockFirstLocation = new LocationBuilder()
-                .withLatitude(-6.90389)
-                .withLongitude(107.61861)
+                .withLatitude(41.000000)
+                .withLongitude(29.000000)
                 .build();
         Location mockSecondLocation = new LocationBuilder()
-                .withLatitude(-6.90389)
-                .withLongitude(107.63861)
+                .withLatitude(41.090000)
+                .withLongitude(29.000000)
                 .build();
 
         // When
@@ -52,7 +52,7 @@ class CourierDistanceServiceImplTest extends AbstractUnitTest {
                 .calculateDistanceInKilometers(mockFirstLocation, mockSecondLocation);
 
         // Then
-        Assertions.assertTrue(distance > 2.0);
+        Assertions.assertTrue(10.0 <= distance && distance <= 10.1);
     }
 
 }
