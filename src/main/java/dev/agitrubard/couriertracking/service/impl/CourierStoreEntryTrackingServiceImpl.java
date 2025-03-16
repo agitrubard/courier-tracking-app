@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -53,7 +52,7 @@ class CourierStoreEntryTrackingServiceImpl implements CourierStoreEntryTrackingS
             final CourierStoreEntry courierStoreEntry = CourierStoreEntry.builder()
                     .courierId(courierId)
                     .storeId(store.getId())
-                    .createdAt(LocalDateTime.now())
+                    .createdAt(currentCourierLocation.getCreatedAt())
                     .build();
             courierStoreEntrySavePort.save(courierStoreEntry);
             log.debug("Courier near to store with storeId: {} and courierId: {}", store.getId(), courierId);

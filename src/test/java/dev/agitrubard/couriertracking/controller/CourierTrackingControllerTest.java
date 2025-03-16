@@ -3,6 +3,7 @@ package dev.agitrubard.couriertracking.controller;
 import dev.agitrubard.couriertracking.AbstractRestControllerTest;
 import dev.agitrubard.couriertracking.model.request.CourierLocationSaveRequest;
 import dev.agitrubard.couriertracking.model.request.CourierLocationSaveRequestBuilder;
+import dev.agitrubard.couriertracking.model.response.CourierDistanceResponse;
 import dev.agitrubard.couriertracking.model.response.CustomErrorResponse;
 import dev.agitrubard.couriertracking.model.response.CustomErrorResponseBuilder;
 import dev.agitrubard.couriertracking.model.response.CustomSuccessResponse;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -185,6 +187,63 @@ class CourierTrackingControllerTest extends AbstractRestControllerTest {
         // Verify
         Mockito.verify(courierTrackingService, Mockito.never())
                 .saveLocation(Mockito.any(CourierLocationSaveRequest.class));
+    }
+
+
+    @Test
+    void givenValidCourierId_whenTotalDistanceKilometersFound_thenReturnSuccess() throws Exception {
+
+        // Given
+        UUID mockCourierId = UUID.fromString("e1088ef7-4244-4cca-b6fe-0239aa1323ca");
+
+        // When
+        Mockito.when(courierTrackingService.findTotalDistanceKilometers(Mockito.any(UUID.class)))
+                .thenReturn(127.0);
+
+        // Then
+        String endpoint = BASE_PATH + "/" + mockCourierId + "/distances/total";
+        MockHttpServletRequestBuilder mockHttpServletRequestBuilder = CustomMockMvcRequestBuilders
+                .get(endpoint);
+
+        CustomSuccessResponse<CourierDistanceResponse> mockResponse = CustomSuccessResponseBuilder.success();
+
+        customMockMvc.perform(mockHttpServletRequestBuilder, mockResponse)
+                .andExpect(CustomMockResultMatchersBuilders.status()
+                        .isOk())
+                .andExpect(CustomMockResultMatchersBuilders.content()
+                        .isNotEmpty())
+                .andExpect(CustomMockResultMatchersBuilders.content("totalDistanceKilometers")
+                        .value(127.0));
+
+        // Verify
+        Mockito.verify(courierTrackingService, Mockito.times(1))
+                .findTotalDistanceKilometers(Mockito.any(UUID.class));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "1",
+            "abc",
+            "not-a-uuid",
+            "g1234567-89ab-cdef-0123-456789abcdef",
+            "ffffffff-ffff-ffff-ffff-fffffffffffff"
+    })
+    void givenCourierId_whenCourierIdIsNotValid_thenReturnValidationError(String mockCourierId) throws Exception {
+
+        // Then
+        String endpoint = BASE_PATH + "/" + mockCourierId + "/distances/total";
+        MockHttpServletRequestBuilder mockHttpServletRequestBuilder = CustomMockMvcRequestBuilders
+                .get(endpoint);
+
+        CustomErrorResponse mockErrorResponse = CustomErrorResponseBuilder.VALIDATION_ERROR;
+
+        customMockMvc.perform(mockHttpServletRequestBuilder, mockErrorResponse)
+                .andExpect(CustomMockResultMatchersBuilders.status()
+                        .isBadRequest());
+
+        // Verify
+        Mockito.verify(courierTrackingService, Mockito.never())
+                .findTotalDistanceKilometers(Mockito.any(UUID.class));
     }
 
 }
