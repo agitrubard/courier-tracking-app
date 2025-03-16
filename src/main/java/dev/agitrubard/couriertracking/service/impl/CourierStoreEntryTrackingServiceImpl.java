@@ -66,9 +66,12 @@ class CourierStoreEntryTrackingServiceImpl implements CourierStoreEntryTrackingS
         final Optional<CourierStoreEntry> lastCourierStoreEntry = courierStoreEntryReadPort
                 .findLastByCourierId(courierId);
 
-        return lastCourierStoreEntry.map(courierStoreEntry -> courierStoreEntry.getCreatedAt()
-                .plusMinutes(1)
-                .isAfter(currentCourierLocation.getCreatedAt())).orElse(false);
+        return lastCourierStoreEntry
+                .map(courierStoreEntry -> courierStoreEntry.getCreatedAt()
+                        .plusMinutes(1)
+                        .isAfter(currentCourierLocation.getCreatedAt())
+                )
+                .orElse(false);
     }
 
 }

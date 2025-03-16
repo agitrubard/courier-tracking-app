@@ -1,6 +1,7 @@
 package dev.agitrubard.couriertracking.model;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class CourierLocationBuilder extends TestDataBuilder<CourierLocation> {
 
@@ -21,6 +22,11 @@ public class CourierLocationBuilder extends TestDataBuilder<CourierLocation> {
         return this;
     }
 
+    public CourierLocationBuilder withCourierId(UUID courierId) {
+        data.setCourierId(courierId);
+        return this;
+    }
+
     public CourierLocationBuilder withLocation(Location location) {
         data.setLocation(location);
         return this;
@@ -38,6 +44,11 @@ public class CourierLocationBuilder extends TestDataBuilder<CourierLocation> {
 
     private CourierLocationBuilder withCreatedAtNow() {
         data.setCreatedAt(LocalDateTime.now());
+        return this;
+    }
+
+    public CourierLocationBuilder withCreatedAt(LocalDateTime createdAt) {
+        data.setCreatedAt(createdAt);
         return this;
     }
 
