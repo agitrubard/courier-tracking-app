@@ -1,5 +1,7 @@
 package dev.agitrubard.couriertracking.model;
 
+import java.util.UUID;
+
 public class CourierBuilder extends TestDataBuilder<Courier> {
 
     public CourierBuilder() {
@@ -12,6 +14,16 @@ public class CourierBuilder extends TestDataBuilder<Courier> {
 
     public CourierBuilder withoutId() {
         data.setId(null);
+        return this;
+    }
+
+    public CourierBuilder withId(UUID id) {
+        data.setId(id);
+        return this;
+    }
+
+    public CourierBuilder withTotalDistanceKilometers(Double totalDistanceKilometers) {
+        data.setTotalDistanceKilometers(totalDistanceKilometers);
         return this;
     }
 
