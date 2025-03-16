@@ -1,5 +1,6 @@
 package dev.agitrubard.couriertracking.service.impl;
 
+import dev.agitrubard.couriertracking.exception.CourierNotFoundException;
 import dev.agitrubard.couriertracking.model.Courier;
 import dev.agitrubard.couriertracking.model.CourierLocation;
 import dev.agitrubard.couriertracking.model.Location;
@@ -106,6 +107,16 @@ class CourierTrackingServiceImpl implements CourierTrackingService {
 
         courier.update(totalDistanceKilometers);
         courierSavePort.save(courier);
+    }
+
+
+    @Override
+    public Double findTotalDistanceKilometers(final UUID courierId) {
+
+        final Courier courier = courierReadPort.findById(courierId)
+                .orElseThrow(() -> new CourierNotFoundException(courierId));
+
+        return courier.getTotalDistanceKilometers();
     }
 
 }
