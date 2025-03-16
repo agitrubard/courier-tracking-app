@@ -100,7 +100,75 @@ class CourierStoreEntryTrackingServiceImplTest extends AbstractUnitTest {
     }
 
     @Test
-    void givenValidCourierIdAndCurrentCourierLocation_whenItsSecondEntryInOneMinutes_thenDoNotLogEntry() {
+    void givenValidCourierIdAndCurrentCourierLocation_whenItsSecondEntryInOneMinutesToTheDifferentStore_thenLogEntry() {
+
+        // Given
+        UUID mockCourierId = UUID.fromString("3f05d6dc-e6a7-46dd-a13c-056eb8c1ec92");
+        CourierLocation mockCurrentCourierLocation = new CourierLocationBuilder()
+                .withValidValues()
+                .withCourierId(mockCourierId)
+                .withLatitude(41.017550)
+                .withLongitude(29.000000)
+                .withCreatedAt(LocalDateTime.now())
+                .build();
+
+        // When
+        Store mockStoreA = new StoreBuilder()
+                .withValidValues()
+                .withId(UUID.fromString("ff684716-2c0d-4479-8705-7b48cbefab63"))
+                .withName("Store A")
+                .withLatitude(41.000000)
+                .withLongitude(29.000000)
+                .build();
+        CourierStoreEntry mockCourierStoreEntry = new CourierStoreEntryBuilder()
+                .withValidValues()
+                .withCourierId(mockCourierId)
+                .withStoreId(mockStoreA.getId())
+                .withCreatedAt(LocalDateTime.now().minusSeconds(30))
+                .build();
+        Mockito.when(courierStoreEntryReadPort.findLastByCourierId(Mockito.any(UUID.class)))
+                .thenReturn(Optional.of(mockCourierStoreEntry));
+
+        Store mockStoreB = new StoreBuilder()
+                .withValidValues()
+                .withId(UUID.fromString("93ee3405-c427-431e-b028-50ac5f946dcf"))
+                .withName("Store B")
+                .withLatitude(41.018000)
+                .withLongitude(29.000000)
+                .build();
+        List<Store> mockStores = List.of(mockStoreA, mockStoreB);
+        Mockito.when(storeReadPort.findAll())
+                .thenReturn(mockStores);
+
+        Mockito.when(courierDistanceService.calculateDistanceInKilometers(mockCurrentCourierLocation.getLocation(), mockStoreA.getLocation()))
+                .thenReturn(0.15);
+
+        Mockito.when(courierDistanceService.calculateDistanceInKilometers(mockCurrentCourierLocation.getLocation(), mockStoreB.getLocation()))
+                .thenReturn(0.05);
+
+        Mockito.doNothing()
+                .when(courierStoreEntrySavePort)
+                .save(Mockito.any(CourierStoreEntry.class));
+
+        // Then
+        courierStoreEntryTrackingService.save(mockCourierId, mockCurrentCourierLocation);
+
+        // Verify
+        Mockito.verify(courierStoreEntryReadPort, Mockito.times(1))
+                .findLastByCourierId(Mockito.any(UUID.class));
+
+        Mockito.verify(storeReadPort, Mockito.times(1))
+                .findAll();
+
+        Mockito.verify(courierDistanceService, Mockito.times(2))
+                .calculateDistanceInKilometers(Mockito.any(Location.class), Mockito.any(Location.class));
+
+        Mockito.verify(courierStoreEntrySavePort, Mockito.times(1))
+                .save(Mockito.any(CourierStoreEntry.class));
+    }
+
+    @Test
+    void givenValidCourierIdAndCurrentCourierLocation_whenItsSecondEntryInOneMinutesToTheSameStore_thenDoNotLogEntry() {
 
         // Given
         UUID mockCourierId = UUID.fromString("b4e6adc8-5ecd-432e-9f07-e87a8981286d");
@@ -115,6 +183,7 @@ class CourierStoreEntryTrackingServiceImplTest extends AbstractUnitTest {
         // When
         Store mockStoreA = new StoreBuilder()
                 .withValidValues()
+                .withId(UUID.fromString("f5e6ac1b-2d85-43a1-808b-8d22c82c012a"))
                 .withName("Store A")
                 .withLatitude(41.000000)
                 .withLongitude(29.000000)
@@ -128,6 +197,23 @@ class CourierStoreEntryTrackingServiceImplTest extends AbstractUnitTest {
         Mockito.when(courierStoreEntryReadPort.findLastByCourierId(Mockito.any(UUID.class)))
                 .thenReturn(Optional.of(mockCourierStoreEntry));
 
+        Store mockStoreB = new StoreBuilder()
+                .withValidValues()
+                .withId(UUID.fromString("1c049d3a-0a41-4115-8f01-67ef85a51371"))
+                .withName("Store B")
+                .withLatitude(41.018000)
+                .withLongitude(29.000000)
+                .build();
+        List<Store> mockStores = List.of(mockStoreA, mockStoreB);
+        Mockito.when(storeReadPort.findAll())
+                .thenReturn(mockStores);
+
+        Mockito.when(courierDistanceService.calculateDistanceInKilometers(mockCurrentCourierLocation.getLocation(), mockStoreA.getLocation()))
+                .thenReturn(0.05);
+
+        Mockito.when(courierDistanceService.calculateDistanceInKilometers(mockCurrentCourierLocation.getLocation(), mockStoreB.getLocation()))
+                .thenReturn(0.15);
+
         // Then
         courierStoreEntryTrackingService.save(mockCourierId, mockCurrentCourierLocation);
 
@@ -135,10 +221,10 @@ class CourierStoreEntryTrackingServiceImplTest extends AbstractUnitTest {
         Mockito.verify(courierStoreEntryReadPort, Mockito.times(1))
                 .findLastByCourierId(Mockito.any(UUID.class));
 
-        Mockito.verify(storeReadPort, Mockito.never())
+        Mockito.verify(storeReadPort, Mockito.times(1))
                 .findAll();
 
-        Mockito.verify(courierDistanceService, Mockito.never())
+        Mockito.verify(courierDistanceService, Mockito.times(2))
                 .calculateDistanceInKilometers(Mockito.any(Location.class), Mockito.any(Location.class));
 
         Mockito.verify(courierStoreEntrySavePort, Mockito.never())
